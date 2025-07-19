@@ -17,38 +17,26 @@ else
     +quit
 fi
 
+updateserver()
+{
+    USER="${USERNAME:-Anonymous}"
+    PWD="${PASSWRD:+ ${PASSWRD}}"
+    PARAMS="${GAME_ID}${UPDATE_PARAMS:+ ${UPDATE_PARAMS}}"
+
+    if [ "${VALIDATE}" == "true" ]; then
+        echo "---Validating installation---"
+        PARAMS+=" validate"
+    fi
+
+    ${STEAMCMD_DIR}/steamcmd.sh \
+        +force_install_dir ${SERVER_DIR} \
+        +login ${USER} ${PWD} \
+        +app_update ${PARAMS} \
+        +quit
+}
+
 echo "---Update Server---"
-if [ "${USERNAME}" == "" ]; then
-    if [ "${VALIDATE}" == "true" ]; then
-    	echo "---Validating installation---"
-        ${STEAMCMD_DIR}/steamcmd.sh \
-        +force_install_dir ${SERVER_DIR} \
-        +login anonymous \
-        +app_update ${GAME_ID} validate \
-        +quit
-    else
-        ${STEAMCMD_DIR}/steamcmd.sh \
-        +force_install_dir ${SERVER_DIR} \
-        +login anonymous \
-        +app_update ${GAME_ID} \
-        +quit
-    fi
-else
-    if [ "${VALIDATE}" == "true" ]; then
-    	echo "---Validating installation---"
-        ${STEAMCMD_DIR}/steamcmd.sh \
-        +force_install_dir ${SERVER_DIR} \
-        +login ${USERNAME} ${PASSWRD} \
-        +app_update ${GAME_ID} validate \
-        +quit
-    else
-        ${STEAMCMD_DIR}/steamcmd.sh \
-        +force_install_dir ${SERVER_DIR} \
-        +login ${USERNAME} ${PASSWRD} \
-        +app_update ${GAME_ID} \
-        +quit
-    fi
-fi
+updateserver
 
 echo "---Prepare Server---"
 if [ ! -f ${DATA_DIR}/.steam/sdk32/steamclient.so ]; then
